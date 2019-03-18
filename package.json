@@ -8,10 +8,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
+  "devDependencies": {},
+  "dependencies": {
     "cucumber": "^5.1.0",
-    "puppeteer": "^1.13.0"
+    "puppeteer": "^1.13.0",
+    "testcafe": "^1.1.0",
+    "vue-app": "git+https://github.com/MrSimsek/vueApp-web.git"
   },
-  "dependencies": {},
   "description": ""
 }
