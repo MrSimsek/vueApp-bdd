@@ -1,13 +1,22 @@
-const web = require('vue-app');
 const { setWorldConstructor } = require('cucumber');
-const puppeteer = require('puppeteer');
-const scope = require('./support/scope');
+const testControllerHolder = require('./support/testControllerHolder');
 
-const World = function() {
-    scope.host = web.host;
-    scope.driver = puppeteer;
-    scope.context = {};
-    scope.web = web;
-};
+function CustomWorld({attach, parameters}) {
 
-setWorldConstructor(World);
+    this.waitForTestController = testControllerHolder.get()
+        .then(function(tc) {
+            return testController = tc;
+        });
+
+    this.attach = attach;
+
+    this.setBrowser = function() {
+        if (parameters.browser === undefined) {
+            return 'chrome';
+        } else {
+            return parameters.browser;
+        }
+    };
+}
+
+setWorldConstructor(CustomWorld);

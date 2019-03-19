@@ -1,28 +1,96 @@
-const { After, Before, AfterAll } = require('cucumber');
-const scope = require('./support/scope');
+const fs = require('fs');
+const createTestCafe = require('testcafe');
+const testControllerHolder = require('./support/testControllerHolder');
+const {AfterAll, setDefaultTimeout, Before, After, Status} = require('cucumber');
+const errorHandling = require('./support/errorHandling');
+const TIMEOUT = 20000;
 
-Before(async () => {
-    // You can clean up database models here
+let isTestCafeError = false;
+let attachScreenshotToReport = null;
+let cafeRunner = null;
+let n = 0;
+
+function createTestFile() {
+    fs.writeFileSync('test.js',
+        'import errorHandling from "./features/support/errorHandling.js";\n' +
+        'import testControllerHolder from "./features/support/testControllerHolder.js";\n\n' +
+
+        'fixture("fixture")\n' +
+
+        'test\n' +
+        '("test", testControllerHolder.capture)')
+}
+
+function runTest(iteration, browser) {
+    createTestCafe('localhost', 1338 + iteration, 1339 + iteration)
+        .then(function(tc) {
+            cafeRunner = tc;
+            const runner = tc.createRunner();
+            return runner
+                .src('./test.js')
+                .screenshots('reports/screenshots/', true)
+                .browsers(browser)
+                .run()
+                .catch(function(error) {
+                    console.error(error);
+                });
+        })
+        .then(function(report) {
+        });
+}
+
+
+setDefaultTimeout(TIMEOUT);
+
+Before(function() {
+    runTest(n, this.setBrowser());
+    createTestFile();
+    n += 2;
+    return this.waitForTestController.then(function(testController) {
+        return testController.maximizeWindow();
+    });
 });
 
-After(async () => {
-    // Here we check if a scenario has instantiated a browser and a current page
-    if(scope.browser && scope.context.currentPage) {
-        // if it has, find all the cookies, and delete them
-        const cookies = await scope.context.currentPage.cookies();
-        if(cookies && cookies.length > 0) {
-            await scope.context.currentPage.deleteCookie(...cookies);
-        }
-        // close the webpage down
-        await scope.context.currentPage.close();
-        // wipe the context's currentPage value
-        scope.context.currentPage = null;
+After(function() {
+    fs.unlinkSync('test.js');
+    testControllerHolder.free();
+});
+
+After(async function(testCase) {
+    const world = this;
+    if (testCase.result.status === Status.FAILED) {
+        isTestCafeError = true;
+        attachScreenshotToReport = world.attachScreenshotToReport;
+        errorHandling.addErrorToController();
+        await errorHandling.ifErrorTakeScreenshot(testController)
     }
 });
 
-AfterAll(async () => {
-    // if there is a browser window open, then close it
-    if(scope.browser) await scope.browser.close();
-    scope.web.shutdown(() => console.log('Web is shutdown'));
-    // lastly close any db connection here like PostgreSQL, MongoDB etc.
+AfterAll(function() {
+    let intervalId = null;
+
+    function waitForTestCafe() {
+        intervalId = setInterval(checkLastResponse, 500);
+    }
+
+    function checkLastResponse() {
+        if (testController.testRun.lastDriverStatusResponse === 'test-done-confirmation') {
+            cafeRunner.close();
+            process.exit();
+            clearInterval(intervalId);
+        }
+    }
+
+    waitForTestCafe();
 });
+
+const getIsTestCafeError = function() {
+    return isTestCafeError;
+};
+
+const getAttachScreenshotToReport = function(path) {
+    return attachScreenshotToReport(path);
+};
+
+exports.getIsTestCafeError = getIsTestCafeError;
+exports.getAttachScreenshotToReport = getAttachScreenshotToReport;
