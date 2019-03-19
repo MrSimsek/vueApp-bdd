@@ -5,7 +5,7 @@ Feature: login
 
   Background:
     Given a user exists with username "denizsimsek93" and password "123456789"
-    And I am on the login page
+    And I am on the "login" page
 
   Scenario: Login (with username)
     And I fill in "username" with "denizsimsek93"

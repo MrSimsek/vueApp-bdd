@@ -1,6 +1,7 @@
 const pages = {
     home: '/',
-    login: '/login'
+    login: '/login',
+    register: '/register'
 }
 
 module.exports = pages;
