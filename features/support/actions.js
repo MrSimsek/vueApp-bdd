@@ -28,10 +28,15 @@ const shouldBeOnPage = async routeName => {
     return true;
 }
 
+const shouldSeeText = async theText => {
+    return true;
+}
+
 module.exports = {
     navigateToPage,
     shouldBeOnPage,
     pending,
     fillInFormField,
-    pressButton
+    pressButton,
+    shouldSeeText
 }
