@@ -14,18 +14,20 @@ const navigateToPage = async routeName => {
 };
 
 const fillInFormField = async (field, value) => {
-    var input = Selector(`#${field}`).with({ boundTestRun: testController });
+    const input = Selector(`#${field}`).with({ boundTestRun: testController });
     await testController.typeText(input, value);
 };
 
 const pressButton = async buttonName => {
     const button = `#${buttonName}-button`;
     await testController.click(Selector(button));
+    await testController.wait(2000);
 };
 
 const shouldBeOnPage = async routeName => {
-    // check the url matches routeName
-    return true;
+    const getURL = ClientFunction(() => window.location.href).with({ boundTestRun: testController });
+    const url = await getURL();
+    await testController.expect(url).contains('/login', 'input contains text "/login"');
 }
 
 const shouldSeeText = async theText => {

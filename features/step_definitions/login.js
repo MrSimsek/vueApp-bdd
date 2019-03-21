@@ -4,13 +4,14 @@ const {
     shouldBeOnPage,
     pending,
     fillInFormField,
-    pressButton
+    pressButton,
+    shouldSeeText
 } = require('../support/actions');
 
 Given('a user exists with username {string} and password {string}', async (username, password) => {
     await navigateToPage('register');
-    await fillInFormField('firstname', "Deniz");
-    await fillInFormField('lastname', "Simsek");
+    await fillInFormField('firstName', "Deniz");
+    await fillInFormField('lastName', "Simsek");
     await fillInFormField('username', username);
     await fillInFormField('password', password);
     await pressButton('register');
