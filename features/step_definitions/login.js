@@ -15,12 +15,14 @@ Given('a user exists with username {string} and password {string}', async (usern
     await fillInFormField('username', username);
     await fillInFormField('password', password);
     await pressButton('register');
+    // send api request
+    // check response
     return await shouldBeOnPage('login');
 });
 
 Given('I am on the {string} page', navigateToPage);
 
-Given('I fill in {string} with {string}', fillInFormField);
+Given('I provide {string} with {string}', fillInFormField);
 
 Given('I press {string} button', pressButton);
 

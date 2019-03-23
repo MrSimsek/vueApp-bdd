@@ -15,7 +15,10 @@ const navigateToPage = async routeName => {
 
 const fillInFormField = async (field, value) => {
     const input = Selector(`#${field}`).with({ boundTestRun: testController });
-    await testController.typeText(input, value);
+    await testController
+            .expect(input.value).eql('', 'input is empty')
+            .typeText(input, value)
+            .expect(input.value).eql(value, `input equals text ${value}`);
 };
 
 const pressButton = async buttonName => {
@@ -24,10 +27,23 @@ const pressButton = async buttonName => {
     await testController.wait(2000);
 };
 
+const sendAPIRequest = async () => {
+
+
+
+    // request with form values before submitting the form
+    // check API response 
+    // click login, check if user info is correct with the api response
+
+
+    
+};
+
 const shouldBeOnPage = async routeName => {
     const getURL = ClientFunction(() => window.location.href).with({ boundTestRun: testController });
     const url = await getURL();
-    await testController.expect(url).contains('/login', 'input contains text "/login"');
+    await testController
+            .expect(url).contains('/login', 'input contains text "/login"');
 }
 
 const shouldSeeText = async theText => {
