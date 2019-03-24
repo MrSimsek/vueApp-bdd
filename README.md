@@ -1,4 +1,4 @@
-# vueApp-integration
+# BDD with Vuejs
 BDD Testing in Vue with Cucumber and TestCafe
 
 ## Files Documentation
