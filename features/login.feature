@@ -1,29 +1,25 @@
-Feature: login
+Feature: A registered user tries to login to the site
   In order to use the site
-  As a user
-  I want to login
+  As a registered user
+  The user wants to login
 
   Background:
     Given a user exists with username "denizsimsek" and password "123456789"
-    And I am on the "login" page
 
-  Scenario: Login (with username)
+  Scenario: The user logs in with valid credentials
     And I provide "username" with "denizsimsek"
     And I provide "password" with "123456789"
-    And I press "login" button
-    Then I should be on the "home" page
-    And I should see "Welcome back, denizsimsek!" text
+    When the user is logging in
+    Then the user should be logged in
 
-  Scenario: Fail to login (incorrect username)
+  Scenario: The user fails to login with incorrect username
     And I provide "username" with "bob"
     And I provide "password" with "123456789101112"
-    And I press "login" button
-    Then I should be on the "login" page
-    And the field "alert" should be "the user bob does not exist"
+    When the user is logging in
+    Then the user should not be logged in
 
-  Scenario: Fail to login (incorrect password)
+  Scenario: The user fail to login with incorrect password
     And I provide "username" with "denizsimsek"
     And I provide "password" with "123456788888888"
-    And I press "login" button
-    Then I should be on the "login" page
-    And the field "alert" should be "password incorrect"
+    When the user is logging in
+    Then the user should not be logged in

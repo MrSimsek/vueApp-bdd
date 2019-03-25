@@ -1,5 +1,5 @@
 const { setWorldConstructor } = require('cucumber');
-const testControllerHolder = require('./support/testControllerHolder');
+const testControllerHolder = require('./testControllerHolder');
 
 function CustomWorld({attach, parameters}) {
 

@@ -1,8 +1,8 @@
 const fs = require('fs');
 const createTestCafe = require('testcafe');
-const testControllerHolder = require('./support/testControllerHolder');
-const {AfterAll, setDefaultTimeout, Before, After, Status} = require('cucumber');
-const errorHandling = require('./support/errorHandling');
+const testControllerHolder = require('./testControllerHolder');
+const { AfterAll, setDefaultTimeout, Before, After, Status } = require('cucumber');
+const errorHandling = require('./errorHandling');
 const TIMEOUT = 20000;
 
 let isTestCafeError = false;
