@@ -5,7 +5,8 @@ const {
     pending,
     fillInFormField,
     pressButton,
-    shouldSeeText
+    shouldSeeText,
+    sendAPIRequest
 } = require('../support/actions');
 
 Given('a user exists with username {string} and password {string}', async (username, password) => {
@@ -15,6 +16,7 @@ Given('a user exists with username {string} and password {string}', async (usern
     await fillInFormField('username', username);
     await fillInFormField('password', password);
     await pressButton('register');
+    await sendAPIRequest('register');
     // send api request
     // check response
     return await shouldBeOnPage('login');

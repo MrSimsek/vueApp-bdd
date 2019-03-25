@@ -3,6 +3,7 @@ const pages = require('./pages');
 const selectors = require('./selectors');
 const { Selector, ClientFunction } = require('testcafe');
 const web = require('vue-app');
+const endpoints = require('./endpoints');
 
 const pending = callback => {
 	callback(null, 'pending');
@@ -27,16 +28,22 @@ const pressButton = async buttonName => {
     await testController.wait(2000);
 };
 
-const sendAPIRequest = async () => {
-
-
-
+const sendAPIRequest = async endpoint => {
+    let url = web.host;
+    switch(endpoint) {
+        case 'register':
+            url += endpoints[endpoint];
+            console.log(url);
+            break;
+        case 'login':
+            break;
+        default:
+            console.log('non valid endpoint');
+            break;
+    }
     // request with form values before submitting the form
     // check API response 
     // click login, check if user info is correct with the api response
-
-
-    
 };
 
 const shouldBeOnPage = async routeName => {
@@ -56,5 +63,6 @@ module.exports = {
     pending,
     fillInFormField,
     pressButton,
-    shouldSeeText
+    shouldSeeText,
+    sendAPIRequest
 }
